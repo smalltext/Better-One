@@ -13,4 +13,9 @@ public class SceneToggler : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public void LoadNext(string nextLevel)
+    {
+        //switch scenes to next level
+    }
 }

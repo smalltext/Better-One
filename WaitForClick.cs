@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class WaitForClick : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public string nextLevel;
+    public string levelManagerObject;
+    public SceneToggler _scenetoggler;
+
+    public void Start()
+    {
+        _scenetoggler = GameObject.Find(levelManagerObject).GetComponent<SceneToggler>();
+    }
+
+    public void OnMouseUp()
+    {
+        _scenetoggler.LoadNext(nextLevel);
+    }
 }
