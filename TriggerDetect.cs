@@ -13,4 +13,14 @@ public class TriggerDetect : MonoBehaviour {
 	void Update () {
 		
 	}
+	
+	void OnTriggerEnter2D(Collider2D other){
+		if(other.gameObject.tag == "CutscenePlayer")
+			//other.gameObject.scene++;
+		else if(other.gameObject.tag == "CheckpointManager"){
+			//other.gameObject.??;
+			other.gameObject.setActive(false);
+		}
+		
+	}
 }
