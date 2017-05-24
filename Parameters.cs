@@ -13,4 +13,7 @@ public class Parameters : MonoBehaviour {
     public float SlopeLimit = 30;
 
     public float Gravity = -25f;
+
+    public float SpeedAccelerationOnGround = 10f;
+    public float SpeedAccelerationInAir = 5f;
 }

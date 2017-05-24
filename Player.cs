@@ -20,8 +20,8 @@ public class Player : MonoBehaviour {
 	void Update () {
         HandleInput();
 
-        var movementFactor = _controller.State.IsGrounded ? _parameters.SpeedAccelerationOnGround : _parameters.SpeedAccelerationInAir;
-        _controller.SetHorizontalForce(Mathf.Lerp(_controller.Velocity.x, _normalizedHorizonalSpeed * _parameters.MaxSpeedHorizontal, Time.deltaTime * movementFactor));
+        var movementFactor = _controller._state.IsGrounded ? _parameters.SpeedAccelerationOnGround : _parameters.SpeedAccelerationInAir;
+        _controller.SetHorizontalForce(Mathf.Lerp(_controller.Velocity.x, _normalizedHorizonalSpeed * _parameters.MaxVelocity.x, Time.deltaTime * movementFactor));
 
         _cameramovement.UpdatePosition();
     }
