@@ -16,10 +16,9 @@ public class TriggerDetect : MonoBehaviour {
 	
 	void OnTriggerEnter2D(Collider2D other){
 		if(other.gameObject.tag == "CutscenePlayer")
-			//other.gameObject.scene++;
-		else if(other.gameObject.tag == "CheckpointManager"){
-			//other.gameObject.??;
-			other.gameObject.setActive(false);
+			//other.gameObject.GetComponent<CutscenePlayer>().addScene();
+		else if(other.gameObject.tag == "CheckpointManager" && other.gameObject.GetComponent<WasTriggered>().triggered == false){
+			other.gameObject.GetComponent<WasTriggered>().triggered = true;
 		}
 		
 	}
