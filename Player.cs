@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour {
     CameraMovement _cameramovement;
 
-    Parameters _parameters;
+    private Parameters _parameters;
 
     private bool _isFacingRight;
     private Controller _controller;
@@ -13,6 +13,7 @@ public class Player : MonoBehaviour {
 
     void Start () {
         _controller = GetComponent<Controller>();
+        _parameters = GetComponent<Parameters>();
         _isFacingRight = transform.localScale.x > 0;    //checks sprite orientation to determine bool
     }
 	
@@ -21,9 +22,10 @@ public class Player : MonoBehaviour {
         HandleInput();
 
         var movementFactor = _controller._state.IsGrounded ? _parameters.SpeedAccelerationOnGround : _parameters.SpeedAccelerationInAir;
-        _controller.SetHorizontalForce(Mathf.Lerp(_controller.Velocity.x, _normalizedHorizonalSpeed * _parameters.MaxVelocity.x, Time.deltaTime * movementFactor));
+        //_controller.SetHorizontalForce(Mathf.Lerp(_controller.Velocity.x, _normalizedHorizonalSpeed * _parameters.MaxVelocity.x, Time.deltaTime * movementFactor));
+        _controller.SetHorizontalForce(_normalizedHorizonalSpeed*movementFactor);
 
-        _cameramovement.UpdatePosition();
+        //_cameramovement.UpdatePosition();
     }
 
     public void HandleInput() //self explanatory
@@ -31,14 +33,10 @@ public class Player : MonoBehaviour {
         if (Input.GetKey(KeyCode.D))
         {
             _normalizedHorizonalSpeed = 1;
-            if (!_isFacingRight)
-                Flip();
         }
         else if (Input.GetKey(KeyCode.A))
         {
             _normalizedHorizonalSpeed = -1;
-            if (_isFacingRight)
-                Flip();
         }
         else
         {
@@ -46,9 +44,4 @@ public class Player : MonoBehaviour {
         }
     }
 
-    private void Flip()
-    {
-        transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-        _isFacingRight = transform.localScale.x > 0;    //sets this again
-    }
 }
