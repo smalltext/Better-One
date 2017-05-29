@@ -9,11 +9,10 @@ public class Parameters : MonoBehaviour {
 
     public Vector2 MaxVelocity = new Vector2(float.MaxValue, float.MaxValue);
 
-    [Range(0, 90)]
-    public float SlopeLimit = 30;
-
     public float Gravity = -.5f;
-    public float Friction = -.9f;
+    public float FrictionOnGround = -.15f;
+    public float FrictionInAir = -.1f;
+    public float HangTime = 5;
 
     public float SpeedAccelerationOnGround = 1.5f;
     public float SpeedAccelerationInAir = 1f;
