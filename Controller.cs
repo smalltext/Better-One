@@ -130,8 +130,8 @@ public class Controller : MonoBehaviour {
         var rayDirection = isGoingRight ? _boxright : -_boxright;
         var rayOrigin = isGoingRight ? _raycastBottomRight : _raycastBottomLeft;
         float allowedMovement = 100;
-        float greatestDistance = 0;
         bool caught = false;
+        Vector2 normalDirection = new Vector2(0,0);
 
         for (var i = 0; i < TotalHorizontalRays; i++)
         {
@@ -143,8 +143,10 @@ public class Controller : MonoBehaviour {
                 continue;
 
             allowedMovement = Mathf.Min(allowedMovement, rayCastHit.distance-SkinWidth);     //sets the right movement to the furthest that can be gone without hitting
-            greatestDistance = Mathf.Max(greatestDistance, rayCastHit.distance);
+            rayDistance = rayCastHit.distance;
             caught = true;
+
+            normalDirection = rayCastHit.normal;
 
             if (rayDistance < SkinWidth + 0.0001f)  //catch, if it's inside a wall
                 break;
@@ -156,7 +158,7 @@ public class Controller : MonoBehaviour {
                 _state.IsCollidingRight = true;
             else
                 _state.IsCollidingLeft = true;
-            _velocity -= Vector2.Dot(_velocity, _boxright) * (Vector2)_boxright;
+            _velocity -= Vector2.Dot(_velocity, normalDirection) * normalDirection;
             if (isGoingRight)
             {
                 _velocity += allowedMovement / Time.deltaTime * _boxright;
@@ -177,6 +179,7 @@ public class Controller : MonoBehaviour {
         var rayOrigin = isGoingUp ? _raycastTopLeft : _raycastBottomLeft;
         float allowedMovement = 100;
         bool caught = false;
+        Vector2 normalDirection = new Vector2(0, 0);
 
         for (var i = 0; i < TotalVerticalRays; i++)
         {
@@ -191,6 +194,8 @@ public class Controller : MonoBehaviour {
 
             caught = true;
 
+            normalDirection = rayCastHit.normal;
+
             if (rayDistance < SkinWidth + 0.0001f)  //catch, if it's inside a wall
                 break;
         }
@@ -202,7 +207,7 @@ public class Controller : MonoBehaviour {
                 _state.IsCollidingAbove = true;
             else
                 _state.IsCollidingBelow = true;
-            _velocity -= Vector2.Dot(_velocity, _boxup) * (Vector2)_boxup;
+            _velocity -= Vector2.Dot(_velocity, normalDirection) * normalDirection;
 
             if (isGoingUp)
             {
@@ -276,6 +281,7 @@ public class Controller : MonoBehaviour {
             hitDist[2] = raycastHit.distance;
         }
         */
+        /*
 
         var leftRayVector = _raycastTopLeft - (0.5f+SkinWidth) * (Vector3)_boxright;
         var leftRaycastHit = Physics2D.Raycast(leftRayVector, -_boxup, 0.9f, PlatformMask);
@@ -317,78 +323,77 @@ public class Controller : MonoBehaviour {
             _rotateto = Vector3.Cross(Vector3.forward, new Vector3(1, rightSlope, 0));
             _rotating = true;
         } else
+        */
+        float leftSlope = -Mathf.Tan(Mathf.Atan(_boxup.x / _boxup.y) + Mathf.Atan((hitDist[1] - hitDist[0]) / (-.5f)));
+        float rightSlope = -Mathf.Tan(Mathf.Atan(_boxup.x / _boxup.y) + Mathf.Atan((hitDist[2] - hitDist[1]) / (-.5f)));
+        //Debug.Log(hitDist[0] + " " + hitDist[1] + " " + hitDist[2]);
+
+        /*
+        if (hitDist[1] == -1 && (hitDist[0] != -1 || hitDist[2] != -1))
         {
-            float leftSlope = -Mathf.Tan(Mathf.Atan(_boxup.x / _boxup.y) + Mathf.Atan((hitDist[1] - hitDist[0]) / (-.5f)));
-            float rightSlope = -Mathf.Tan(Mathf.Atan(_boxup.x / _boxup.y) + Mathf.Atan((hitDist[2] - hitDist[1]) / (-.5f)));
-            //Debug.Log(hitDist[0] + " " + hitDist[1] + " " + hitDist[2]);
-
-            /*
-            if (hitDist[1] == -1 && (hitDist[0] != -1 || hitDist[2] != -1))
+            if (hitDist[0] != -1)
             {
-                if (hitDist[0] != -1)
-                {
-                    rayVector = (Vector2)_raycastBottomLeft - SkinWidth * (Vector2)_boxright;
+                rayVector = (Vector2)_raycastBottomLeft - SkinWidth * (Vector2)_boxright;
 
-                    raycastHit = Physics2D.Raycast(rayVector, Vector3.down, 1, PlatformMask);
-                    if (raycastHit)
-                    {
-                        float outHitDist = raycastHit.distance;
-                        leftSlope = (hitDist[0] - outHitDist) / (SkinWidth * Vector3.Dot(_boxright, Vector3.right));
-                        rightSlope = -5;
-                    }
-                }
-                if (hitDist[2] != -1)
+                raycastHit = Physics2D.Raycast(rayVector, Vector3.down, 1, PlatformMask);
+                if (raycastHit)
                 {
-                    rayVector = (Vector2)_raycastBottomRight + SkinWidth * (Vector2)_boxright;
-
-                    raycastHit = Physics2D.Raycast(rayVector, Vector3.down, rayDistance, PlatformMask);
-                    if (raycastHit)
-                    {
-                        float outHitDist = raycastHit.distance;
-                        rightSlope = (outHitDist - hitDist[2]) / (SkinWidth * Vector3.Dot(_boxright, Vector3.right));
-                        leftSlope = -5;
-                    }
+                    float outHitDist = raycastHit.distance;
+                    leftSlope = (hitDist[0] - outHitDist) / (SkinWidth * Vector3.Dot(_boxright, Vector3.right));
+                    rightSlope = -5;
                 }
             }
-            */
-
-            //Debug.Log(leftSlope);
-            //Debug.Log(rightSlope);
-            //Debug.Log(Mathf.Tan(Mathf.Atan(_boxup.x / _boxup.y) + Mathf.Atan(-leftSlope)));
-
-            if ( Mathf.Abs(leftSlope - lastSlope) >= 0.05f && Mathf.Abs(rightSlope - lastSlope) >= 0.05f)
+            if (hitDist[2] != -1)
             {
-                for (int i = 0; i < _possibleSlopes.Length; i++)
+                rayVector = (Vector2)_raycastBottomRight + SkinWidth * (Vector2)_boxright;
+
+                raycastHit = Physics2D.Raycast(rayVector, Vector3.down, rayDistance, PlatformMask);
+                if (raycastHit)
                 {
-                    if (Mathf.Abs(rightSlope - _possibleSlopes[i]) < 0.05f)
-                    {
-                        _rotateto = Vector3.Cross(Vector3.forward, new Vector3(1, _possibleSlopes[i], 0));
-                        lastSlope = _possibleSlopes[i];
-                        _rotating = true;
-                    }
-                    if (Mathf.Abs(leftSlope - _possibleSlopes[i]) < 0.05f)
-                    {
-                        _rotateto = Vector3.Cross(Vector3.forward, new Vector3(1, _possibleSlopes[i], 0));
-                        lastSlope = _possibleSlopes[i];
-                        _rotating = true;
-                    }
+                    float outHitDist = raycastHit.distance;
+                    rightSlope = (outHitDist - hitDist[2]) / (SkinWidth * Vector3.Dot(_boxright, Vector3.right));
+                    leftSlope = -5;
                 }
             }
-            /*
+        }
+        */
+
+        //Debug.Log(leftSlope);
+        //Debug.Log(rightSlope);
+        //Debug.Log(Mathf.Tan(Mathf.Atan(_boxup.x / _boxup.y) + Mathf.Atan(-leftSlope)));
+
+        if ( Mathf.Abs(leftSlope - lastSlope) >= 0.05f && Mathf.Abs(rightSlope - lastSlope) >= 0.05f)
+        {
             for (int i = 0; i < _possibleSlopes.Length; i++)
             {
-                if ( Mathf.Abs(leftSlope + _possibleSlopes[i]) < 0.01f)
+                if (Mathf.Abs(rightSlope - _possibleSlopes[i]) < 0.05f)
                 {
                     _rotateto = Vector3.Cross(Vector3.forward, new Vector3(1, _possibleSlopes[i], 0));
+                    lastSlope = _possibleSlopes[i];
+                    _rotating = true;
                 }
-                if (Mathf.Abs(rightSlope + _possibleSlopes[i]) < 0.01f && IsGoingRight())
+                if (Mathf.Abs(leftSlope - _possibleSlopes[i]) < 0.05f)
                 {
                     _rotateto = Vector3.Cross(Vector3.forward, new Vector3(1, _possibleSlopes[i], 0));
+                    lastSlope = _possibleSlopes[i];
+                    _rotating = true;
                 }
             }
-            */
-            //System.Math.Abs(leftSlope - _possibleSlopes[i] + (_boxup.x/_boxup.y))
         }
+        /*
+        for (int i = 0; i < _possibleSlopes.Length; i++)
+        {
+            if ( Mathf.Abs(leftSlope + _possibleSlopes[i]) < 0.01f)
+            {
+                _rotateto = Vector3.Cross(Vector3.forward, new Vector3(1, _possibleSlopes[i], 0));
+            }
+            if (Mathf.Abs(rightSlope + _possibleSlopes[i]) < 0.01f && IsGoingRight())
+            {
+                _rotateto = Vector3.Cross(Vector3.forward, new Vector3(1, _possibleSlopes[i], 0));
+            }
+        }
+        */
+        //System.Math.Abs(leftSlope - _possibleSlopes[i] + (_boxup.x/_boxup.y))
     }
 
     private bool IsGoingRight()
@@ -403,37 +408,34 @@ public class Controller : MonoBehaviour {
     private void Rotate()
     {
         bool rotateit = false;
-        if (_state.IsGrounded)
+        var rayCastHit1 = Physics2D.Raycast(_raycastBottomLeft - (SkinWidth) * (Vector3)_boxup, _boxright, 1.5f * _boxCollider.size.x * Mathf.Abs(_localScale.x), PlatformMask);
+        var rayCastHit2 = Physics2D.Raycast(_raycastBottomRight - (SkinWidth) * (Vector3)_boxup, -_boxright, 1.5f * _boxCollider.size.x * Mathf.Abs(_localScale.x), PlatformMask);
+        if (rayCastHit1 && rayCastHit1.distance != 0)
         {
-            var rayCastHit1 = Physics2D.Raycast(_raycastBottomLeft - (SkinWidth) * (Vector3)_boxup, _boxright, 1.5f * _boxCollider.size.x * Mathf.Abs(_localScale.x), PlatformMask);
-            var rayCastHit2 = Physics2D.Raycast(_raycastBottomRight - (SkinWidth) * (Vector3)_boxup, -_boxright, 1.5f * _boxCollider.size.x * Mathf.Abs(_localScale.x), PlatformMask);
-            if (rayCastHit1 && rayCastHit1.distance != 0)
-            {
-                _rotationpoint = (Vector3)rayCastHit1.point;
-                rotateit = true;
-            }
-            else if (rayCastHit2 && rayCastHit2.distance != 0)
-            {
-                _rotationpoint = (Vector3)rayCastHit2.point;
-                rotateit = true;
-            } else {
-                if (_state.IsCollidingRight)
-                {
-                    _rotationpoint = _transform.position - 0.5f * (Vector3)_boxright;
-                } else if (_state.IsCollidingLeft)
-                {
-                    _rotationpoint = _transform.position + 0.5f * (Vector3)_boxright;
-                }
-            }
+            _rotationpoint = (Vector3)rayCastHit1.point;
+            rotateit = true;
+        }
+        else if (rayCastHit2 && rayCastHit2.distance != 0)
+        {
+            _rotationpoint = (Vector3)rayCastHit2.point;
+            rotateit = true;
         }
         //Debug.Log(Vector3.Distance(_transform.position,rotationPoint));
-        Debug.Log(_rotationpoint);
+        //Debug.Log(Mathf.Atan(_rotateto.y / _rotateto.x));
         Debug.DrawLine(_transform.position, _rotationpoint);
         //Debug.Log(Vector3.Angle(_rotateto, _boxup));
 
+        float ang = Vector2.Angle(_boxup, _rotateto);
+        Vector3 cross = Vector3.Cross(_boxup, _rotateto);
+
+        if (cross.z > 0)
+            ang = 360 - ang;
+
+        Debug.Log(ang);
+
         if (rotateit)
         {
-            _transform.RotateAround(_rotationpoint, Vector3.forward, Mathf.Rad2Deg*(Mathf.Atan(_rotateto.y/_rotateto.x)-Mathf.Atan(_boxup.y/_boxup.x)));
+            _transform.RotateAround(_rotationpoint, Vector3.forward, -ang);
             _rotating = false;
         }
 
