@@ -30,7 +30,7 @@ public class Player : MonoBehaviour {
         _controller.SetHorizontalForce(_normalizedHorizonalSpeed*movementFactor);
 
         PlayThump(_normalizedHorizonalSpeed * movementFactor);
-        //_cameramovement.UpdatePosition();
+        _cameramovement.UpdatePosition();
 
         _uidisplayer.DisplayTime(Time.time - _starttime);
     }
