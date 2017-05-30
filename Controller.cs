@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -73,8 +73,8 @@ public class Controller : MonoBehaviour {
         if (_state.HasGravity)
         {
             _velocity.y += _parameters.Gravity;
-            RotateUpdate();
         }
+        RotateUpdate();
         if (_state.IsGrounded )
         {
             _velocity += Vector2.Dot(_velocity, _boxright) * _parameters.FrictionOnGround * _boxright;
@@ -271,5 +271,4 @@ public class Controller : MonoBehaviour {
         }
 
     }
-	
 }
