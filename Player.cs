@@ -7,6 +7,7 @@ public class Player : MonoBehaviour {
 
     private Parameters _parameters;
     public AudioSource _audio;
+    public UIDisplayer _uidisplayer;
 
     private Controller _controller;
     private float _normalizedHorizonalSpeed;
@@ -30,6 +31,8 @@ public class Player : MonoBehaviour {
 
         PlayThump(_normalizedHorizonalSpeed * movementFactor);
         //_cameramovement.UpdatePosition();
+
+        _uidisplayer.DisplayTime(Time.time - _starttime);
     }
 
     public void HandleInput() //self explanatory
