@@ -1,10 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class CameraMovement : MonoBehaviour {
-	
-	GameObject player;
+public GameObject player;
 	public int panSpeed;
 	Vector3 lastPos;
 	bool locked;
@@ -13,49 +7,47 @@ public class CameraMovement : MonoBehaviour {
 		locked = false;
 		player = GameObject.FindWithTag("Player");
 		lastPos = transform.position;
-		
-	}
-	
+		}
+
 	void Update(){
 		if(player != null && !locked){
 			transform.position = player.transform.position;
 		}
-		
+	
 		//make sure to choose input key
-		if(Input.GetKeyDown(KeyCode.???)){
+		/*if(Input.GetKeyDown(KeyCode.Q)){
 			lockPos();
-			MoveTo(???);
+			MoveTo(new Vector2(15.0f, player.transform.position.y));
 		}
-		if(Input.GetKeyDown(KeyCode.???)){
+		if(Input.GetKeyDown(KeyCode.R)){
 			MoveBack();
-		}
-		if(Input.GetKeyDown(KeyCode.???)){
+		}*/
+		if(Input.GetKeyDown(KeyCode.Y)){
 			lockPos();
 		}
 	}
+	/*
+	public void UpdatePosition()
+	{
+		//Manual update loop called by Player, which can be stopped
+	}
 
-    public void UpdatePosition()
-    {
-        //Manual update loop called by Player, which can be stopped
-    }
+	public void MoveTo(Vector2 place)
+	{
+		//Pans camera to desired position
+		lastPos = transform.position;
+		transform.position = Vector3.Lerp(lastPos, new Vector3(place.x, place.y), Time.deltaTime * panSpeed);
+	}
 
-    public Static void MoveTo(Vector2 place)
-    {
-        //Pans camera to desired position
-	lastPos = transform.position;
-	transform.position = Vector3.Lerp(lastPos, place.Vector3, Time.DeltaTime * panSpeed);
-    }
+	public void MoveBack()
+	{
+		//Pans camera back to original position
+		Vector3 currentPos = transform.position;
+		transform.position = Vector3.Lerp(currentPos, player.transform.position, Time.deltaTime * panSpeed);
+	}
+	*/
 
-    public Static void MoveBack()
-    {
-        //Pans camera back to original position
-	Vector3 currentPos = transform.position;
-	transform.position = Vector3.Lerp(currentPos, lastPos, Time.DeltaTime * panSpeed);
-    }
-	
-	
-	public Static void lockPos(){
+	public void lockPos(){
 		locked = true;
 		transform.position = transform.position;
 	}
-}
