@@ -4,13 +4,9 @@ using UnityEngine;
 
 public class WasTriggered : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+	private bool triggered;
 	
-	// Update is called once per frame
-	void Update () {
-		
+	void Start(){
+		triggered = false;
 	}
 }
