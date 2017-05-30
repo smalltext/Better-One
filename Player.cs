@@ -6,34 +6,39 @@ public class Player : MonoBehaviour {
     CameraMovement _cameramovement;
 
     private Parameters _parameters;
+    public AudioSource _audio;
 
     private Controller _controller;
     private float _normalizedHorizonalSpeed;
     private float _starttime;
+    private Vector2 _lastvelocity;
 
     void Start () {
         _controller = GetComponent<Controller>();
         _parameters = GetComponent<Parameters>();
         _starttime = 0;
+        _lastvelocity = _controller.Velocity;
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if (_controller._state.IsGrounded)
-        {
-            _starttime = Time.time;
-        }
 
         HandleInput();
 
         var movementFactor = _controller._state.IsGrounded ? _parameters.SpeedAccelerationOnGround : _parameters.SpeedAccelerationInAir;
         _controller.SetHorizontalForce(_normalizedHorizonalSpeed*movementFactor);
 
-        _cameramovement.UpdatePosition();
+        PlayThump(_normalizedHorizonalSpeed * movementFactor);
+        //_cameramovement.UpdatePosition();
     }
 
     public void HandleInput() //self explanatory
     {
+        if (_controller._state.IsGrounded)
+        {
+            _starttime = Time.time;
+        }
+
         if (Input.GetKey(KeyCode.D))
         {
             _normalizedHorizonalSpeed = 1;
@@ -53,6 +58,14 @@ public class Player : MonoBehaviour {
         {
             _controller._state.HasGravity = true;
         }
+    }
+
+    public void PlayThump(float controllerspeed)
+    {
+        if ((Mathf.Abs(_controller.Velocity.x) < 0.01f && Mathf.Abs(_lastvelocity.x) > _parameters.ThumpAccel) || (Mathf.Abs(_controller.Velocity.y) < 0.01f && Mathf.Abs(_lastvelocity.y) > _parameters.ThumpAccel)) {
+            _audio.Play();
+        }
+        _lastvelocity = _controller.Velocity;
     }
 
 }
