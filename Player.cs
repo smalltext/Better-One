@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
-    CameraMovement _cameramovement;
 
     private Parameters _parameters;
     public AudioSource _audio;
@@ -30,7 +29,6 @@ public class Player : MonoBehaviour {
         _controller.SetHorizontalForce(_normalizedHorizonalSpeed*movementFactor);
 
         PlayThump(_normalizedHorizonalSpeed * movementFactor);
-        _cameramovement.UpdatePosition();
 
         _uidisplayer.DisplayTime(Time.time - _starttime);
     }
