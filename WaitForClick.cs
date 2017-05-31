@@ -15,6 +15,6 @@ public class WaitForClick : MonoBehaviour {
 
     public void OnMouseUp()
     {
-        _scenetoggler.LoadNext(nextLevel);
+        _scenetoggler.Load(nextLevel);
     }
 }
