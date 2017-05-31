@@ -73,6 +73,9 @@ public class Controller : MonoBehaviour {
         if (_state.HasGravity)
         {
             _velocity.y += _parameters.Gravity;
+        } else
+        {
+            _velocity.y -= _parameters.Gravity;
         }
         RotateUpdate();
         if (_state.IsGrounded )
